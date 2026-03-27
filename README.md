@@ -1,64 +1,67 @@
 # ExternalDiskTempMonitor
 
-ExternalDiskTempMonitor 是一款专为 macOS 设计的外置硬盘温度监控工具。它可以实时监控连接到 Mac 的外部硬盘温度，并在屏幕顶部状态栏（如果屏幕包含刘海，会自动避让并悬浮显示）中显示。
+*[阅读中文版说明 (简体中文)](README_zh.md)*
 
-## 功能特性
+ExternalDiskTempMonitor is an external hard drive temperature monitoring tool designed specifically for macOS. It monitors the temperatures of external drives connected to your Mac in real-time and displays them in the top menu bar.
+
+## Features
 
 ![Status Bar Example](example.png)
 
-- **极简无感监控**：菜单栏只显示一个 macOS 原生的外接硬盘图标（`externaldrive`），实现“0占用”零打扰模式。
-- **详实的状态报告**：点击菜单栏的硬盘图标，下拉菜单会显示所有已连接外置硬盘的**完整卷名称**和实时温度。
-- **智能空闲提示**：当没有任何外接硬盘时，菜单栏仅显示硬盘图标，点击下拉菜单会提示 `///No Ex Disk///`。
-- **完善的设备兼容**：能够智能识别 SD 卡等原生无 SMART 传感器的设备，并在下拉菜单中对其温度显示为 `N/A` 而非将其意外隐藏。
+- **Minimalist & Zero-Distraction**: A clean, native macOS external drive icon (`externaldrive`) is the only thing shown in the menu bar. 
+  > **💡 Pro Tip**: Simply click the hard drive icon in the menu bar to reveal a drop-down menu containing the full names and real-time temperatures of all connected external drives!
+- **Detailed Status Reports**: The drop-down menu displays the **full volume name** and real-time temperature of all connected external drives.
+- **Smart Idle State**: When no external drives are connected, the menu bar only displays the icon. Clicking it will show `///No Ex Disk///` in the drop-down menu.
+- **Great Device Compatibility**: Intelligently identifies devices without native SMART sensors (like SD cards) and displays their temperature as `N/A` in the drop-down rather than improperly hiding them.
 
-## 环境要求
+## Requirements
 
-1. macOS（支持 Apple Silicon 与 Intel）。
-2. **重点核心要求**：必须安装 **smartmontools** (用于底层数据读取)：
+1. macOS (Supports both Apple Silicon and Intel).
+2. **Core Requirement**: You MUST install **smartmontools** (for low-level data reading):
    ```bash
    brew install smartmontools
    ```
 
-*(如果你使用下方的**推荐一键安装**，则**不需要**安装开发环境，也**不需要** git clone 下载任何源码！)*
+*(If you use the **Recommended 1-Click Install** below, you **DO NOT** need to install a development environment or git clone anything!)*
 
-## 安装与使用
+## Installation & Usage
 
-### 推荐：极速一键安装（免编译，开箱即用）
+### Recommended: 1-Click Quick Install (No Compilation Needed)
 
-打开 Mac 的**终端（Terminal）**，完整复制并粘贴以下一行命令，然后按下回车。该命令会自动下载打包好的软件直接安装到 `/Applications`（免去了你自己编译源码的麻烦），并配置开机自启动：
+Open the Mac **Terminal**, completely copy and paste the single line command below, and press Enter. This command will automatically download the pre-compiled software, install it directly to `/Applications` (saving you the hassle of compiling from source), and configure it to start at boot:
 
 ```bash
 curl -sL https://raw.githubusercontent.com/BingkangShi/ExternalDiskTempMonitor/main/install_release.sh | bash
 ```
 
-### 方式二：手动克隆并安装
+### Method 2: Manual Clone & Install
 
-如果你已经（或打算）将代码克隆到本地，在终端中定位到本项目目录并运行：
+If you have cloned (or plan to clone) the code repository locally, navigate to the project directory in your terminal and run:
 ```bash
 ./install.sh
 ```
 
-**该安装脚本将会自动执行以下操作**：
-1. 编译 `main.swift` 为可执行文件 `ExternalDiskTempMonitor.app`。
-2. 将程序安装到系统的 `/Applications/ExternalDiskTempMonitor.app`。
-3. 如果在此之前有运行该程序的历史实例，脚本会将其结束进程。
-4. **开机自设定配置**：自动在 `~/Library/LaunchAgents` 中生成并加载对应的 `.plist` 守护文件。
+**The installation script will automatically perform the following operations:**
+1. Compile `main.swift` into an executable `ExternalDiskTempMonitor.app`.
+2. Install the application to the system's `/Applications/ExternalDiskTempMonitor.app`.
+3. Terminate any historically running instances of the application.
+4. **Auto-start Configuration**: Automatically generate and load the corresponding `.plist` daemon file in `~/Library/LaunchAgents`.
 
-### 如何设定为随系统启动而启动（默认开启）
-`install.sh` 脚本在安装过程中会**自动为您启用**开机自启动。
-核心原理是在 `~/Library/LaunchAgents/com.user.externaldisktempmonitor.plist` 创建配置文件并调用 `launchctl load`。系统会在每次您登录时自动在后台打开此应用。
+### How to Enable Auto-Start at Login (Enabled by Default)
+The `install_release.sh` and `install.sh` scripts will **automatically enable** auto-start for you during installation.
+The core principle is creating a configuration file at `~/Library/LaunchAgents/com.user.externaldisktempmonitor.plist` and calling `launchctl load`. The system will automatically open this application in the background every time you log in.
 
-### 如何取消系统自启动
-如果您不希望继续让它开机自启动，可以通过以下命令取消：
+### How to Disable Auto-Start
+If you no longer wish for it to start automatically at boot, you can cancel it using the following commands:
 ```bash
 launchctl unload ~/Library/LaunchAgents/com.user.externaldisktempmonitor.plist
-# 移除守护文件
+# Remove the daemon file
 rm ~/Library/LaunchAgents/com.user.externaldisktempmonitor.plist
 ```
-*(取消自启动后，您仍然可以手动前往**应用程序**文件夹双击 `ExternalDiskTempMonitor.app` 启动它)*
+*(After disabling auto-start, you can still manually launch it by double-clicking `ExternalDiskTempMonitor.app` in your **Applications** folder)*
 
-## 卸载
-1. 停止当前运行：
-   点击顶部状态栏的 `///No Ex Disk///`（或温度监控信息）触发下拉菜单，点击 `Quit ExternalDiskTempMonitor`。
-2. 移除开机自启动配置文件（如上）。
-3. 前往 `/Applications/` 文件夹删除 `ExternalDiskTempMonitor.app`。
+## Uninstallation
+1. Stop the current process:
+   Click the hard drive icon in the top menu bar to trigger the drop-down menu, then click `Quit ExternalDiskTempMonitor`.
+2. Remove the auto-start configuration file (as shown above).
+3. Go to the `/Applications/` folder and delete `ExternalDiskTempMonitor.app`.

@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Xcode and Build
+build/
+*.app
+*.dSYM/
+*.o
+
+# IDE
+.idea/
+.vscode/

@@ -1,6 +1,6 @@
-# DiskTempMonitor
+# ExternalDiskTempMonitor
 
-DiskTempMonitor 是一款专为 macOS 设计的外置硬盘温度监控工具。它可以实时监控连接到 Mac 的外部硬盘温度，并在屏幕顶部状态栏（如果屏幕包含刘海，会自动避让并悬浮显示）中显示。
+ExternalDiskTempMonitor 是一款专为 macOS 设计的外置硬盘温度监控工具。它可以实时监控连接到 Mac 的外部硬盘温度，并在屏幕顶部状态栏（如果屏幕包含刘海，会自动避让并悬浮显示）中显示。
 
 ## 功能特性
 
@@ -29,26 +29,26 @@ DiskTempMonitor 是一款专为 macOS 设计的外置硬盘温度监控工具。
 ```
 
 **该安装脚本将会自动执行以下操作**：
-1. 编译 `main.swift` 为可执行文件 `DiskTempMonitor.app`。
-2. 将程序安装到系统的 `/Applications/DiskTempMonitor.app`。
+1. 编译 `main.swift` 为可执行文件 `ExternalDiskTempMonitor.app`。
+2. 将程序安装到系统的 `/Applications/ExternalDiskTempMonitor.app`。
 3. 如果在此之前有运行该程序的历史实例，脚本会将其结束进程。
 4. **开机自设定配置**：自动在 `~/Library/LaunchAgents` 中生成并加载对应的 `.plist` 守护文件。
 
 ### 如何设定为随系统启动而启动（默认开启）
 `install.sh` 脚本在安装过程中会**自动为您启用**开机自启动。
-核心原理是在 `~/Library/LaunchAgents/com.user.disktempmonitor.plist` 创建配置文件并调用 `launchctl load`。系统会在每次您登录时自动在后台打开此应用。
+核心原理是在 `~/Library/LaunchAgents/com.user.externaldisktempmonitor.plist` 创建配置文件并调用 `launchctl load`。系统会在每次您登录时自动在后台打开此应用。
 
 ### 如何取消系统自启动
 如果您不希望继续让它开机自启动，可以通过以下命令取消：
 ```bash
-launchctl unload ~/Library/LaunchAgents/com.user.disktempmonitor.plist
+launchctl unload ~/Library/LaunchAgents/com.user.externaldisktempmonitor.plist
 # 移除守护文件
-rm ~/Library/LaunchAgents/com.user.disktempmonitor.plist
+rm ~/Library/LaunchAgents/com.user.externaldisktempmonitor.plist
 ```
-*(取消自启动后，您仍然可以手动前往**应用程序**文件夹双击 `DiskTempMonitor.app` 启动它)*
+*(取消自启动后，您仍然可以手动前往**应用程序**文件夹双击 `ExternalDiskTempMonitor.app` 启动它)*
 
 ## 卸载
 1. 停止当前运行：
-   点击顶部状态栏的 `///No Ex Disk///`（或温度监控信息）触发下拉菜单，点击 `Quit DiskTempMonitor`。
+   点击顶部状态栏的 `///No Ex Disk///`（或温度监控信息）触发下拉菜单，点击 `Quit ExternalDiskTempMonitor`。
 2. 移除开机自启动配置文件（如上）。
-3. 前往 `/Applications/` 文件夹删除 `DiskTempMonitor.app`。
+3. 前往 `/Applications/` 文件夹删除 `ExternalDiskTempMonitor.app`。

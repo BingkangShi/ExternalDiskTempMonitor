@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>DiskTempMonitor</string>
+    <string>ExternalDiskTempMonitor</string>
     <key>CFBundleIdentifier</key>
-    <string>com.user.disktempmonitor</string>
+    <string>com.user.externaldisktempmonitor</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>CFBundleShortVersionString</key>

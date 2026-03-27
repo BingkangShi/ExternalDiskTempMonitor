@@ -5,7 +5,7 @@ import DiskArbitration
 
 // MARK: - App Delegate
 
-class DiskTempMonitor: NSObject, NSApplicationDelegate {
+class ExternalDiskTempMonitor: NSObject, NSApplicationDelegate {
     // Display — status item (right side of menu bar)
     private var statusItem: NSStatusItem?
     private var menu: NSMenu!
@@ -18,7 +18,7 @@ class DiskTempMonitor: NSObject, NSApplicationDelegate {
     private var diskModels: [String: String] = [:]
     private var daSession: DASession?
     private var isQuerying = false
-    private let queryQueue = DispatchQueue(label: "com.disktempmonitor.query", qos: .utility)
+    private let queryQueue = DispatchQueue(label: "com.externaldisktempmonitor.query", qos: .utility)
 
     private let smartctlPath: String = {
         for p in ["/opt/homebrew/bin/smartctl", "/usr/local/bin/smartctl"] {
@@ -80,7 +80,7 @@ class DiskTempMonitor: NSObject, NSApplicationDelegate {
 
         menu.addItem(NSMenuItem.separator())
 
-        let quitItem = NSMenuItem(title: "Quit DiskTempMonitor", action: #selector(quitApp), keyEquivalent: "q")
+        let quitItem = NSMenuItem(title: "Quit ExternalDiskTempMonitor", action: #selector(quitApp), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
         
@@ -96,12 +96,12 @@ class DiskTempMonitor: NSObject, NSApplicationDelegate {
 
         DARegisterDiskAppearedCallback(session, nil, { disk, ctx in
             guard let ctx = ctx else { return }
-            Unmanaged<DiskTempMonitor>.fromOpaque(ctx).takeUnretainedValue().onDiskAppeared(disk)
+            Unmanaged<ExternalDiskTempMonitor>.fromOpaque(ctx).takeUnretainedValue().onDiskAppeared(disk)
         }, ctx)
 
         DARegisterDiskDisappearedCallback(session, nil, { disk, ctx in
             guard let ctx = ctx else { return }
-            Unmanaged<DiskTempMonitor>.fromOpaque(ctx).takeUnretainedValue().onDiskDisappeared(disk)
+            Unmanaged<ExternalDiskTempMonitor>.fromOpaque(ctx).takeUnretainedValue().onDiskDisappeared(disk)
         }, ctx)
 
         DASessionScheduleWithRunLoop(session, CFRunLoopGetMain(), CFRunLoopMode.defaultMode.rawValue)
@@ -332,6 +332,6 @@ class DiskTempMonitor: NSObject, NSApplicationDelegate {
 
 let app = NSApplication.shared
 app.setActivationPolicy(.accessory)
-let delegate = DiskTempMonitor()
+let delegate = ExternalDiskTempMonitor()
 app.delegate = delegate
 app.run()
